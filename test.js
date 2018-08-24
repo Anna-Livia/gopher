@@ -23,29 +23,6 @@
     // write your code here
     // HINT: you have access to the `console` object for debugging
 var f = require('./my_function');
-let maria = {x:0, y:0, destination:null}
-let mariasMission = {"x":3, "y":4, "start":20, "length": 10,}
-
-if (f.roundsToDestination(maria, mariasMission) == 4){console.log("timeToDestination", true)} else{throw "timeToDestination failed"}
-
-if (f.roundsToCompleteMission(mariasMission) == 6){console.log("roundsToCompleteMission", true)} else{throw "roundsToCompleteMission failed"}
-
-
-maria = {x:0, y:0, destination:null}
-mariasMission = {"x":5, "y":7, "start":25, "length": 12,}
-
-if (f.roundsToDestination(maria, mariasMission) == 7){console.log("timeToDestination", true)} else{throw "timeToDestination failed"}
-if (f.roundsToCompleteMission(mariasMission) == 8){console.log("roundsToCompleteMission", true)} else{throw "roundsToCompleteMission failed"}
-
-let paul = {x:5, y:4, destination:{x: 9, y: 5}, occupe: 5}
-f.masseusUpdate(paul)
-if (paul.occupe == 4){console.log("masseusUpdate", true)} else{throw "masseusUpdate failed"}
-
-jacques = {x:5, y:4, destination:{x: 9, y: 5}, occupe: 1}
-f.masseusUpdate(jacques)
-if (jacques.occupe == false && jacques.destination == null && jacques.position.x == 9 && jacques.position.y == 5){console.log("masseusUpdate_2", true)} else{throw "masseusUpda_2 failed"}
-f.masseusUpdate(jacques)
-if (jacques.occupe == false && jacques.destination == null && jacques.position.x == 9 && jacques.position.y == 5){console.log("masseusUpdate_3", true)} else{throw "masseusUpda_3 failed"}
 
 function test_runner(max_time, missions){
     // Mission Raiting
