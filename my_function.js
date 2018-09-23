@@ -1,9 +1,9 @@
 let mission_backlog = []
-let jp = {position: {x:0, y:0}, destination:null, occupe: false}
+let jp = {position: {x:0, y:0}, destination: null, occupe: false}
 let rounds = 0
 
 function roundsToDestination(masseus, mission){
-    const distance = Math.sqrt(Math.pow(mission.x - masseus.x, 2) + Math.pow(mission.y -masseus.y, 2))
+    const distance = Math.sqrt(Math.pow(mission.x - masseus.position.x, 2) + Math.pow(mission.y - masseus.position.y, 2))
     const speed = 15 / 60
     const time = distance / speed
     return Math.ceil(time/5)
@@ -42,6 +42,7 @@ function makeComparer(masseus) {
 function attributeMissions(missions){
     mission_backlog = mission_backlog.concat(missions)
     masseusUpdate(jp)
+
     let available_missions = mission_backlog.filter(
         function(mission){
         if (Math.ceil(mission.start/5) < rounds){
@@ -53,6 +54,7 @@ function attributeMissions(missions){
         let compare = makeComparer(jp)
         let sortedMissions = available_missions.sort(compare)
         let missionAtHand = available_missions[0]
+
       if (missionAtHand.start / 5 > roundsToDestination(jp, missionAtHand) + rounds){
             jp.destination = {x: missionAtHand.x, y: missionAtHand.y}
             jp.occupe = roundsToCompleteMission(missionAtHand)
@@ -60,7 +62,6 @@ function attributeMissions(missions){
     }
 
     rounds += 1
-    console.log(rounds)
 
     if (jp.destination != null) {
         return {1: jp.destination}
@@ -71,7 +72,7 @@ function attributeMissions(missions){
 
 function clean(){
     mission_backlog = []
-    jp = {x:0, y:0, destination:null, occupe: false}
+    jp = {position: {x: 0, y: 0}, destination:null, occupe: false}
     rounds = 0
 }
 function displayEndState(){
