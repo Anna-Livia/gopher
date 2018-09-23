@@ -1,7 +1,7 @@
 var f = require('./my_function');
 
 
-class Masseus{
+class Masseus {
     constructor(){
         this.id = 0
         this.position = {x: 0, y: 0},

@@ -1,6 +1,27 @@
 let mission_backlog = []
 
-let staff = [{name: 1, position: {x:0, y:0}, destination:null, occupe: false}]
+const teamSize = 50
+
+class TeamMember {
+    constructor(){
+        this.name = 0
+        this.position = {x: 0, y: 0},
+        this.destination = null,
+        this.occupe = false
+    }
+  }
+
+const teamGenerator = (numberOfTeammates) => {
+    team = []
+    for (let i = 0; i < numberOfTeammates; i++){
+        let m = new TeamMember
+        m.name = i + 1
+        team.push(m)
+    }
+    return team
+}
+
+let staff = teamGenerator(teamSize)
 
 let rounds = 0
 
@@ -32,7 +53,11 @@ function makeComparer(masseus) {
   return function(a, b) {
     const roundsToStart_a = Math.ceil(a.start/5) - rounds
     const roundsToStart_b = Math.ceil(b.start/5) - rounds
-      if (roundsToDestination(masseus, a) + roundsToStart_a < roundsToDestination(masseus, b) + roundsToStart_b)
+
+        if (a.status && typeof(b.status)!= undefined) {
+            return 1
+        }
+        if (roundsToDestination(masseus, a) + roundsToStart_a < roundsToDestination(masseus, b) + roundsToStart_b)
          return -1;
       if (roundsToDestination(masseus, a) > roundsToDestination(masseus, b))
          return 1;
@@ -44,8 +69,6 @@ function makeComparer(masseus) {
 
 function attributeMissions(missions){
     mission_backlog = mission_backlog.concat(missions)
-
-    console.log("f.mission_backlog", mission_backlog)
     staff = staff.map(x => masseusUpdate(x))
     let available_staff = staff.filter(
         function(masseus){
@@ -54,42 +77,44 @@ function attributeMissions(missions){
         } else {return false}
     })
 
-    let available_missions = mission_backlog.filter(
-        function(mission){
-        if (Math.ceil(mission.start/5) < rounds){
-            return false
-        } else {return true}
-    })
-    console.log("available_missions", available_missions)
 
-    if (available_missions.length == 0 || available_staff == 0){
-        rounds += 1
-        console.log(rounds)
-        return {}
-    }
+
+
 
     give_out_mission = function(masseus){
+        let available_missions = mission_backlog.filter(
+        function(mission){
+        if ((Math.ceil(mission.start/5) < rounds) || (mission.status)){
+            return false
+        } else {
+            return true
+        }
+        })
         let compare = makeComparer(masseus)
         let sortedMissions = available_missions.sort(compare)
         let missionAtHand = available_missions[0]
+        if(missionAtHand){
+            missionAtHand.status = "staffed"
+            masseus.destination = {x: missionAtHand.x, y: missionAtHand.y}
+            masseus.occupe = roundsToCompleteMission(missionAtHand)
+        }
 
-        masseus.destination = {x: missionAtHand.x, y: missionAtHand.y}
-        masseus.occupe = roundsToCompleteMission(missionAtHand)
-
+        return masseus
     }
-    console.log("available_staff", available_staff)
+
     assignment = available_staff.map(x => give_out_mission(x))
-    console.log("assignment", assignment)
-    console.log("type assignment", typeof(assignment))
+
     rounds += 1
 
-    console.log(rounds)
     result = {}
-    for(var element in assignment){
-        result[element.id] = element.destination
-    }
+    for (let elementIndex = 0; elementIndex < assignment.length; elementIndex++){
+        element = assignment[elementIndex]
+        if (element.destination != null) {
+            result[element.name] = element.destination
+        }
 
-    return {}
+    }
+    return result
 
 }
 

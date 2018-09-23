@@ -10,7 +10,7 @@ const AreObjectsEquals = (a, b) => {
             }
         return c == d
         }
-        
+
     const a_attributes = Object.keys(a)
     const equal_attributes = a_attributes.filter(
         function (element) { return compare_elements(a[element], b[element])}
@@ -47,8 +47,8 @@ let test_passer = (name, test, result) => {
 test_passer("test AreObjectsEquals_basics", AreObjectsEquals({'a':1, 'b':2}, {'a':1, 'b':2}), true)
 test_passer("test AreObjectsEquals_real_life", AreObjectsEquals({x:0, y:0, destination:null}, {x:1, y:3, destination:null}), false)
 
-const maria = {x:0, y:0, destination:null}
-const jules = {x:1, y:2, destination:null}
+const maria = {position:{x:0, y:0}, destination:null}
+const jules = {position:{x:1, y:2}, destination:null}
 
 const mission1 = {"x":3, "y":4, "start":20, "length": 10}
 const mission2 = {"x":6, "y":9, "start":25, "length": 12}
