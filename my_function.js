@@ -1,5 +1,7 @@
 let mission_backlog = []
-let jp = {position: {x:0, y:0}, destination: null, occupe: false}
+
+let staff = [{name: 1, position: {x:0, y:0}, destination:null, occupe: false}]
+
 let rounds = 0
 
 function roundsToDestination(masseus, mission){
@@ -23,6 +25,7 @@ function masseusUpdate(masseus){
             masseus.position = masseus.destination
             masseus.destination = null
         }
+    return masseus
 }
 
 function makeComparer(masseus) {
@@ -41,7 +44,15 @@ function makeComparer(masseus) {
 
 function attributeMissions(missions){
     mission_backlog = mission_backlog.concat(missions)
-    masseusUpdate(jp)
+
+    console.log("f.mission_backlog", mission_backlog)
+    staff = staff.map(x => masseusUpdate(x))
+    let available_staff = staff.filter(
+        function(masseus){
+        if (masseus.occupe == false){
+            return true
+        } else {return false}
+    })
 
     let available_missions = mission_backlog.filter(
         function(mission){
@@ -49,23 +60,35 @@ function attributeMissions(missions){
             return false
         } else {return true}
     })
+    console.log("available_missions", available_missions)
 
-    if (available_missions.length > 0 && jp.destination == null){
-        let compare = makeComparer(jp)
+    if (available_missions.length == 0 || available_staff == 0){
+        rounds += 1
+        console.log(rounds)
+        return {}
+    }
+
+    give_out_mission = function(masseus){
+        let compare = makeComparer(masseus)
         let sortedMissions = available_missions.sort(compare)
         let missionAtHand = available_missions[0]
 
-      if (missionAtHand.start / 5 > roundsToDestination(jp, missionAtHand) + rounds){
-            jp.destination = {x: missionAtHand.x, y: missionAtHand.y}
-            jp.occupe = roundsToCompleteMission(missionAtHand)
-            }
-    }
+        masseus.destination = {x: missionAtHand.x, y: missionAtHand.y}
+        masseus.occupe = roundsToCompleteMission(missionAtHand)
 
+    }
+    console.log("available_staff", available_staff)
+    assignment = available_staff.map(x => give_out_mission(x))
+    console.log("assignment", assignment)
+    console.log("type assignment", typeof(assignment))
     rounds += 1
 
-    if (jp.destination != null) {
-        return {1: jp.destination}
+    console.log(rounds)
+    result = {}
+    for(var element in assignment){
+        result[element.id] = element.destination
     }
+
     return {}
 
 }
